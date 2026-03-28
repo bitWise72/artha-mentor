@@ -1,21 +1,30 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+const getKeys = () => [
+  process.env.GEMINI_API_KEY,
+  process.env.FALL_BACK_API_1,
+  process.env.FALL_BACK_API_2
+].filter(Boolean) as string[];
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-async function withRetry<T>(fn: () => Promise<T>, maxRetries = 4, initialDelayMs = 2000): Promise<T> {
+async function withRetry<T>(fn: (client: GoogleGenAI) => Promise<T>, maxRetries = 5, initialDelayMs = 2000): Promise<T> {
+  const keys = getKeys();
   let attempt = 0;
+  let keyIndex = 0;
+  
   while (attempt < maxRetries) {
     try {
-      return await fn();
+      const client = new GoogleGenAI({ apiKey: keys[keyIndex]! });
+      return await fn(client);
     } catch (err: any) {
       const msg = err?.message?.toLowerCase() || "";
       if (err?.status === 429 || msg.includes("429") || msg.includes("quota") || msg.includes("rate") || msg.includes("fetch failed")) {
         attempt++;
         if (attempt >= maxRetries) throw err;
+        keyIndex = (keyIndex + 1) % keys.length; // Cycle Key
         const delay = initialDelayMs * Math.pow(2, attempt - 1); // Exact Exponential backoff
-        console.warn(`[Artha API] Rate limited (429). Retrying ${attempt}/${maxRetries} in ${delay}ms...`);
+        console.warn(`[Artha API] Rate limited (429). Shifting to fallback API Key ${keyIndex}. Retrying ${attempt}/${maxRetries} in ${delay}ms...`);
         await sleep(delay);
       } else {
         throw err;
@@ -26,8 +35,8 @@ async function withRetry<T>(fn: () => Promise<T>, maxRetries = 4, initialDelayMs
 }
 
 export async function generateFinancialAdvice(prompt: string, userContext: string): Promise<string> {
-  return withRetry(async () => {
-    const result = await ai.models.generateContent({
+  return withRetry(async (client) => {
+    const result = await client.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
         {
@@ -51,8 +60,8 @@ export async function generateFinancialAdvice(prompt: string, userContext: strin
 }
 
 export async function generateHealthAnalysis(userContext: string): Promise<string> {
-  return withRetry(async () => {
-    const result = await ai.models.generateContent({
+  return withRetry(async (client) => {
+    const result = await client.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
         {
@@ -86,8 +95,8 @@ export async function generateHealthAnalysis(userContext: string): Promise<strin
 }
 
 export async function generateTaxAnalysis(userContext: string): Promise<string> {
-  return withRetry(async () => {
-    const result = await ai.models.generateContent({
+  return withRetry(async (client) => {
+    const result = await client.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
         {
@@ -120,8 +129,8 @@ export async function generateTaxAnalysis(userContext: string): Promise<string> 
 }
 
 export async function generateFamilyAnalysis(familyContext: string): Promise<string> {
-  return withRetry(async () => {
-    const result = await ai.models.generateContent({
+  return withRetry(async (client) => {
+    const result = await client.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
         {
@@ -154,8 +163,8 @@ export async function generateFamilyAnalysis(familyContext: string): Promise<str
 }
 
 export async function generatePortfolioXRay(userContext: string): Promise<string> {
-  return withRetry(async () => {
-    const result = await ai.models.generateContent({
+  return withRetry(async (client) => {
+    const result = await client.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
         {
@@ -197,8 +206,8 @@ export async function generatePortfolioXRay(userContext: string): Promise<string
 }
 
 export async function generateInsights(userContext: string): Promise<string> {
-  return withRetry(async () => {
-    const result = await ai.models.generateContent({
+  return withRetry(async (client) => {
+    const result = await client.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
         {
