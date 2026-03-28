@@ -15,27 +15,27 @@ import {
 } from "recharts";
 import styles from "./page.module.css";
 
-const CustomTooltip = ({ active, payload, label }: any) => {
-  if (active && payload && payload.length) {
-    return (
-      <div style={{
-        background: "rgba(18,18,18,0.95)",
-        border: "1px solid rgba(255,255,255,0.1)",
-        borderRadius: "12px",
-        padding: "0.75rem 1rem",
-      }}>
-        <p style={{ fontWeight: 600, marginBottom: "0.25rem" }}>Age {label} ({2026 + (label - 28)})</p>
-        <p style={{ color: "var(--accent-color)", fontWeight: 600 }}>₹{payload[0].value}L Net Worth</p>
-      </div>
-    );
-  }
-  return null;
-};
-
 export default function GoalsPage() {
   const { profile, getFireProjection } = useUser();
   const fireData = getFireProjection();
   const currentYear = new Date().getFullYear();
+
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div style={{
+          background: "rgba(18,18,18,0.95)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: "12px",
+          padding: "0.75rem 1rem",
+        }}>
+          <p style={{ fontWeight: 600, marginBottom: "0.25rem" }}>Age {label} ({currentYear + (label - profile.age)})</p>
+          <p style={{ color: "var(--accent-color)", fontWeight: 600 }}>₹{payload[0].value}L Net Worth</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <main className={styles.container}>

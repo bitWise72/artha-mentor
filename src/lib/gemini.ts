@@ -34,7 +34,7 @@ async function withRetry<T>(fn: (client: GoogleGenAI) => Promise<T>, maxRetries 
   throw new Error("Max retries exceeded");
 }
 
-export async function generateFinancialAdvice(prompt: string, userContext: string): Promise<string> {
+export async function generateFinancialAdvice(prompt: string, userContext: string): Promise<string[]> {
   return withRetry(async (client) => {
     const result = await client.models.generateContent({
       model: "gemini-2.5-flash",
@@ -43,19 +43,39 @@ export async function generateFinancialAdvice(prompt: string, userContext: strin
           role: "user",
           parts: [
             {
-              text: `You are Artha AI, an expert Indian personal finance advisor embedded in the Economic Times. You give concise, actionable, India-specific financial advice. Always reference exact sections (80C, 80D, 80CCD), specific fund names, and real tax slabs. Be warm but data-driven. Use ₹ for currency. Keep responses under 200 words unless the user asks for detail.
-  
-  USER FINANCIAL CONTEXT:
-  ${userContext}
-  
-  USER QUESTION:
-  ${prompt}`,
+              text: `You are Artha AI, a friendly, human-sounding personal finance expert. Give extremely concise, conversational, India-specific advice. 
+RULES:
+1. NEVER use bolding (**), asterisks, or markdown formatting whatsoever.
+2. Break up your thought process strictly into an exact JSON array of 1 to 4 short string messages like you are texting back.
+3. Every single fact must immediately include a super short inline citation like [Source: IT Act Sec 80C] or [Source: RBI Data] at the end of the sentence.
+
+Return ONLY raw JSON with exactly this structure:
+{
+  "messages": [
+    "Hey! That's a great question about ELSS funds.",
+    "Since you're in the 30% tax bracket, investing in Parag Parikh Tax Saver can save you up to ₹46,800 under Section 80C [Source: IT Act Sec 80C].",
+    "Should we look at locking in some SIPs today?"
+  ]
+}
+
+USER FINANCIAL CONTEXT:
+${userContext}
+
+USER QUESTION:
+${prompt}`,
             },
           ],
         },
       ],
+      config: { responseMimeType: "application/json" }
     });
-    return result.text || "I'm sorry, I couldn't generate a response right now. Please try again.";
+    
+    try {
+      const parsed = JSON.parse(result.text || "{}");
+      return parsed.messages || ["I'm sorry, I couldn't generate a response right now. Please try again."];
+    } catch {
+       return ["I'm sorry, I encountered a formatting error. Please try again."];
+    }
   });
 }
 
@@ -71,6 +91,16 @@ export async function generateHealthAnalysis(userContext: string): Promise<strin
               text: `You are Artha AI. Analyze this Indian user's financial health and provide a JSON response with exactly this structure (no markdown, no code fences, just raw JSON):
   {
     "overallScore": <number 0-100>,
+    "fireProgress": <number 0-100 indicating closeness to FIRE>,
+    "fireStatus": "<short positive/negative status e.g. 'On Track' or 'Lagging'>",
+    "portfolioDiversity": [
+      {"subject": "Large Cap", "A": <number>, "fullMark": 100},
+      {"subject": "Mid Cap", "A": <number>, "fullMark": 100},
+      {"subject": "Small Cap", "A": <number>, "fullMark": 100},
+      {"subject": "Debt", "A": <number>, "fullMark": 100},
+      {"subject": "Gold/Comm.", "A": <number>, "fullMark": 100},
+      {"subject": "International", "A": <number>, "fullMark": 100}
+    ],
     "dimensions": [
       {"name": "Emergency Fund", "score": <number>, "label": "<short status>"},
       {"name": "Insurance Coverage", "score": <number>, "label": "<short status>"},

@@ -70,7 +70,11 @@ export default function MascotTutor() {
         body: JSON.stringify({ message: userMsg, userContext })
       });
       const data = await res.json();
-      setMessages((prev) => [...prev, { role: "ai", content: data.response || "Error generating response." }]);
+      const newMessages = Array.isArray(data.response) 
+        ? data.response.map((msg: string) => ({ role: "ai" as const, content: msg }))
+        : [{ role: "ai" as const, content: data.response || "Error generating response." }];
+      
+      setMessages((prev) => [...prev, ...newMessages]);
     } catch (err) {
       setMessages((prev) => [...prev, { role: "ai", content: "Sorry, I'm fetching a lot of data right now. Give me a second and try again!" }]);
     } finally {

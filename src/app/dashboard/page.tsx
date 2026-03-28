@@ -16,7 +16,14 @@ import {
 import styles from "./page.module.css";
 
 type AIDimension = { name: string; score: number; label: string };
-type AIHealth = { overallScore: number; dimensions: AIDimension[]; topInsight: string };
+type AIHealth = { 
+  overallScore: number; 
+  fireProgress: number;
+  fireStatus: string;
+  portfolioDiversity: { subject: string; A: number; fullMark: number }[];
+  dimensions: AIDimension[]; 
+  topInsight: string 
+};
 
 export default function Dashboard() {
   const { profile, calculateHealthScore, getHealthDimensions, getPortfolioDiversity } = useUser();
@@ -56,6 +63,10 @@ export default function Dashboard() {
     ...d,
     icon: ["🛡️", "⚡", "📊", "💳", "📋", "🎯"][i] || "📌",
   })) ?? localDimensions;
+
+  const finalPortfolioData = aiHealth?.portfolioDiversity?.map(d => ({ ...d, value: d.A })) || portfolioData;
+  const fireScore = aiHealth?.fireProgress ?? 34;
+  const fireText = aiHealth?.fireStatus ?? "On Track";
 
   const getTimeGreeting = () => {
     const h = new Date().getHours();
@@ -110,8 +121,8 @@ export default function Dashboard() {
             <span className={styles.statCardLabel}>FIRE Progress</span>
             <div className={styles.statCardIcon}><Flame size={18} /></div>
           </div>
-          <div className={styles.statCardValue}>34%</div>
-          <div className={`${styles.statCardChange} ${styles.positive}`}>On Track</div>
+          <div className={styles.statCardValue}>{loading ? "..." : `${fireScore}%`}</div>
+          <div className={`${styles.statCardChange} ${fireScore >= 50 ? styles.positive : styles.warning}`}>{loading ? "Analyzing..." : fireText}</div>
         </div>
       </motion.div>
 
@@ -150,7 +161,7 @@ export default function Dashboard() {
           <h2 className={styles.panelTitle}>🔮 Portfolio Diversity</h2>
           <p style={{ color: "var(--text-secondary)", fontSize: "0.875rem", marginBottom: "1rem" }}>How diversified your portfolio is</p>
           <ResponsiveContainer width="100%" height={320}>
-            <RadarChart data={portfolioData} cx="50%" cy="50%" outerRadius="75%">
+            <RadarChart data={finalPortfolioData} cx="50%" cy="50%" outerRadius="75%">
               <PolarGrid stroke="rgba(255,255,255,0.08)" />
               <PolarAngleAxis dataKey="subject" tick={{ fill: "var(--text-secondary)", fontSize: 12 }} />
               <PolarRadiusAxis tick={false} axisLine={false} />
