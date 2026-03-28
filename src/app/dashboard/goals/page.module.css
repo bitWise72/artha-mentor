@@ -1,0 +1,154 @@
+.container {
+  padding: 2.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 2rem;
+}
+
+/* FIRE Planner Card */
+.fireCard {
+  background: var(--surface-color);
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.fireHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.fireStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.fireStat {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.fireStatLabel {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.fireStatValue {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.fireStatValue.accent {
+  color: var(--accent-color);
+}
+
+.fireStatValue.success {
+  color: var(--success-color);
+}
+
+.chartContainer {
+  height: 350px;
+  margin-bottom: 1rem;
+}
+
+.fireTip {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+}
+
+/* Financial Roadmap */
+.roadmapCard {
+  background: var(--surface-color);
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
+  padding: 2rem;
+}
+
+.roadmapTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.roadmapTimeline {
+  position: relative;
+  padding-left: 2.5rem;
+}
+
+.roadmapTimeline::before {
+  content: '';
+  position: absolute;
+  left: 0.75rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--accent-color), rgba(255,255,255,0.05));
+}
+
+.roadmapItem {
+  position: relative;
+  margin-bottom: 2.5rem;
+}
+
+.roadmapItem:last-child {
+  margin-bottom: 0;
+}
+
+.roadmapDot {
+  position: absolute;
+  left: -2rem;
+  top: 0.25rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--bg-color);
+  border: 3px solid var(--accent-color);
+}
+
+.roadmapDot.done {
+  background: var(--accent-color);
+}
+
+.roadmapDot.success {
+  border-color: var(--success-color);
+  background: var(--success-color);
+}
+
+.roadmapItemTitle {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.roadmapItemYear {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.roadmapItemDesc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}

@@ -1,0 +1,82 @@
+.pageContainer {
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+}
+
+.backButton:hover {
+  color: var(--text-primary);
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.description {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+}
+
+.glassCard {
+  background: rgba(18, 18, 18, 0.4);
+  border: 1px solid var(--surface-border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+}
+
+.uploadArea {
+  border: 2px dashed var(--surface-border);
+  border-radius: 16px;
+  padding: 4rem 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.uploadArea:hover {
+  border-color: var(--accent-color);
+  background: rgba(91, 95, 216, 0.05);
+}
+
+.uploadIcon {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  background: var(--text-primary);
+  color: var(--bg-color);
+  border-radius: 99px;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+}
