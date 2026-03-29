@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useUser } from "@/context/UserContext";
-import { FileText, CheckCircle, AlertTriangle, Loader2 } from "lucide-react";
+import { FileText, CheckCircle, AlertTriangle } from "lucide-react";
+import FunFactLoader from "@/components/FunFactLoader";
 import styles from "../shared.module.css";
 
 type Deduction = { section: string; name: string; limit: number; claimed: number; missed: number; suggestion: string };
@@ -49,12 +50,7 @@ export default function TaxWizard() {
   if (loading) {
     return (
       <main className={styles.pageContainer} style={{ maxWidth: "1280px", display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh" }}>
-        <div style={{ textAlign: "center" }}>
-          <Loader2 size={48} style={{ animation: "spin 1s linear infinite", color: "var(--accent-color)", marginBottom: "1rem" }} />
-          <h2>Artha is analyzing your tax structure...</h2>
-          <p style={{ color: "var(--text-secondary)", marginTop: "0.5rem" }}>Computing optimal regime comparison with AI</p>
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        </div>
+        <FunFactLoader title="Artha is analyzing your tax structure..." subtitle="Computing optimal regime comparison with AI" />
       </main>
     );
   }

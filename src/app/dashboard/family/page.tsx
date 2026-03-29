@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useUser } from "@/context/UserContext";
-import { Users, CheckCircle, Loader2, ArrowRight } from "lucide-react";
+import { Users, CheckCircle, ArrowRight } from "lucide-react";
+import FunFactLoader from "@/components/FunFactLoader";
 import styles from "../shared.module.css";
 
 type FamilyData = {
@@ -103,12 +104,7 @@ export default function FamilyPage() {
 
       {/* Loading */}
       {loading && (
-        <div style={{ textAlign: "center", padding: "4rem" }}>
-          <Loader2 size={48} style={{ animation: "spin 1s linear infinite", color: "var(--accent-color)", marginBottom: "1rem" }} />
-          <h2>Artha AI is optimizing your family finances...</h2>
-          <p style={{ color: "var(--text-secondary)", marginTop: "0.5rem" }}>Analyzing HRA splits, NPS matching, SIP distribution</p>
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        </div>
+        <FunFactLoader title="Artha AI is optimizing your family finances..." subtitle="Analyzing HRA splits, NPS matching, SIP distribution." />
       )}
 
       {/* Results */}

@@ -3,8 +3,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useUser } from "@/context/UserContext";
-import { BarChart3, PieChart as PieChartIcon, Loader2 } from "lucide-react";
+import { BarChart3, PieChart as PieChartIcon } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import FunFactLoader from "@/components/FunFactLoader";
 import styles from "../shared.module.css";
 
 const CHART_COLORS = ["#5b5fd8", "#818cf8", "#a78bfa", "#10B981", "#F59E0B", "#06B6D4"];
@@ -53,12 +54,7 @@ export default function PortfolioPage() {
   if (loading) {
     return (
       <main className={styles.pageContainer} style={{ maxWidth: "1280px", display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh" }}>
-        <div style={{ textAlign: "center" }}>
-          <Loader2 size={48} style={{ animation: "spin 1s linear infinite", color: "var(--accent-color)", marginBottom: "1rem" }} />
-          <h2>Running AI Portfolio X-Ray...</h2>
-          <p style={{ color: "var(--text-secondary)", marginTop: "0.5rem" }}>Artha is analyzing allocation, overlap & XIRR</p>
-          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        </div>
+        <FunFactLoader title="Running AI Portfolio X-Ray..." subtitle="Artha is analyzing allocation, overlap & XIRR" />
       </main>
     );
   }

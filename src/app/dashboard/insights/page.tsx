@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useUser } from "@/context/UserContext";
 import { Lightbulb, Landmark, Sparkles, Calendar, Globe } from "lucide-react";
+import FunFactLoader from "@/components/FunFactLoader";
 import styles from "../shared.module.css";
 
 type LifeEvent = { event: string; estimatedAge: number; estimatedCost: number; preparedness: string; action: string };
@@ -58,11 +59,7 @@ export default function InsightsPage() {
   if (loading) {
     return (
       <main className={styles.pageContainer} style={{ maxWidth: "1280px", display: "flex", alignItems: "center", justifyContent: "center", minHeight: "60vh" }}>
-        <div style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <img src="/images/nano_banana.png" style={{ height: "80px", width: "80px", objectFit: "contain", marginBottom: "1.5rem", animation: "pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1)" }} />
-          <h2 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>Synthesizing personalized insights...</h2>
-          <p style={{ color: "var(--text-secondary)" }}>Artha is analyzing live market data, life events, and alpha opportunities.</p>
-        </div>
+        <FunFactLoader title="Synthesizing personalized insights..." subtitle="Artha is analyzing live market data, life events, and alpha opportunities." />
       </main>
     );
   }
@@ -89,27 +86,17 @@ export default function InsightsPage() {
         <p className={styles.description}>Personalized life event planning, government schemes, alternative investments, and live market integrations.</p>
       </motion.div>
 
-      {/* Avaatar AI & Economic Times Updates */}
-      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
-        <div className={styles.glassCard} style={{ flex: "1 1 300px" }}>
-          <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1rem" }}>
-            <img src="/images/nano_banana.png" style={{ height: "40px", width: "40px", borderRadius: "50%", marginRight: "1rem", border: "1px solid var(--accent-color)" }} />
-            <div>
-              <h3 style={{ margin: 0, fontSize: "1.1rem" }}>Nano Banana (Avatar AI)</h3>
-              <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Market Insight Synthesizer</span>
-            </div>
-          </div>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", lineHeight: 1.5 }}>
-            {marketUpdates?.insight || "Generating live market synthesis..."}
-          </p>
-        </div>
-
-        <div className={styles.glassCard} style={{ flex: "1 1 300px" }}>
+      {/* Economic Times Updates */}
+      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", marginBottom: "1.5rem", width: "100%" }}>
+        <div className={styles.glassCard} style={{ flex: "1 1 100%" }}>
           <h3 style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "1rem" }}>
-            <Globe size={18} color="var(--accent-color)" /> Latest Updates
+            <Globe size={18} color="var(--accent-color)" /> Latest Market Updates
             <span style={{ fontSize: "0.7rem", color: "var(--text-secondary)", fontStyle: "italic", marginLeft: "auto" }}>Powered by Economic Times</span>
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+            <p style={{ color: "white", fontSize: "0.95rem", lineHeight: 1.5, marginBottom: "0.5rem", fontStyle: "italic", borderLeft: "3px solid var(--accent-color)", paddingLeft: "10px" }}>
+              {marketUpdates?.insight || "Synthesizing market impacts..."}
+            </p>
             {marketUpdates ? marketUpdates.news.map((n, i) => (
               <a key={i} href={n.url} target="_blank" rel="noreferrer" style={{ display: "flex", gap: "12px", alignItems: "center", textDecoration: "none" }}>
                 <img src={n.image} style={{ width: "48px", height: "48px", objectFit: "cover", borderRadius: "8px" }} />

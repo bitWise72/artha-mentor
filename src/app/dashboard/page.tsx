@@ -200,34 +200,28 @@ export default function Dashboard() {
         </Link>
       </motion.div>
 
-      {/* Avaatar AI & Economic Times Updates */}
+      {/* Economic Times Updates */}
       <motion.div className={styles.middleRow} style={{ marginTop: "1rem" }} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}>
         <div className={styles.panel} style={{ flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1rem" }}>
-            <img src="/images/nano_banana.png" style={{ height: "40px", width: "40px", borderRadius: "50%", marginRight: "1rem", border: "1px solid var(--accent-color)" }} />
-            <div>
-              <h2 className={styles.panelTitle} style={{ margin: 0, fontSize: "1.1rem" }}>Nano Banana (Avatar AI)</h2>
-              <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Market Insight Synthesizer</span>
-            </div>
-          </div>
-          <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", lineHeight: 1.5 }}>
-            {marketUpdates?.insight || (loading ? "Generating real-time insights..." : "Stay invested for long term compounding.")}
-          </p>
-        </div>
-
-        <div className={styles.panel} style={{ flex: 1 }}>
-          <h2 className={styles.panelTitle} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Globe size={18} color="var(--accent-color)" /> Latest Updates
-            <span style={{ fontSize: "0.7rem", color: "var(--text-secondary)", fontStyle: "italic", marginLeft: "auto" }}>Powered by Economic Times</span>
+          <h2 className={styles.panelTitle} style={{ display: "flex", alignItems: "center", gap: "8px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "12px", marginBottom: "1rem" }}>
+            <Globe size={18} color="var(--accent-color)" /> Live Market Updates
+            <span style={{ fontSize: "0.7rem", color: "var(--text-secondary)", fontStyle: "italic", marginLeft: "auto", background: "rgba(255,255,255,0.1)", padding: "2px 8px", borderRadius: "12px" }}>Powered by Economic Times</span>
           </h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "1rem" }}>
+          
+          {marketUpdates && (
+            <p style={{ color: "white", fontSize: "0.95rem", lineHeight: 1.5, marginBottom: "1rem", fontStyle: "italic", borderLeft: "3px solid var(--accent-color)", paddingLeft: "12px" }}>
+              💡 {marketUpdates.insight}
+            </p>
+          )}
+
+          <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
             {marketUpdates ? marketUpdates.news.map((n, i) => (
-              <a key={i} href={n.url} target="_blank" rel="noreferrer" style={{ display: "flex", gap: "12px", alignItems: "center", textDecoration: "none" }}>
-                <img src={n.image} style={{ width: "48px", height: "48px", objectFit: "cover", borderRadius: "8px" }} />
+              <a key={i} href={n.url} target="_blank" rel="noreferrer" style={{ flex: "1 1 200px", padding: "12px", display: "flex", flexDirection: "column", gap: "10px", textDecoration: "none", transition: "transform 0.2s", borderRadius: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                <img src={n.image} style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "8px" }} />
                 <p style={{ fontSize: "0.85rem", color: "white", margin: 0, fontWeight: 500, lineHeight: 1.4 }}>{n.title}</p>
               </a>
             )) : (
-              <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>Loading ET headlines...</p>
+              <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem", padding: "1rem" }}>Loading ET headlines & synthesis...</p>
             )}
           </div>
         </div>
