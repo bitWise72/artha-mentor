@@ -24,14 +24,14 @@ export async function GET() {
         title: r.title,
         url: r.url,
         content: r.content,
-        image: r.image || "/images/mascot.png"
+        image: r.image || "/images/image.png"
      })) || [];
 
      // If empty just return mock ET news so UI doesn't break
      if (newsItems.length === 0) {
         return NextResponse.json({
            news: [
-             { title: "Sensex crosses 85,000 mark! Bank Nifty surges.", url: "https://economictimes.indiatimes.com/", image: "/images/mascot.png" }
+             { title: "Sensex crosses 85,000 mark! Bank Nifty surges.", url: "https://economictimes.indiatimes.com/", image: "/images/image.png" }
            ],
            insight: "The broader market remains buoyant. Consider increasing equity allocations towards large-caps."
         });
@@ -47,7 +47,7 @@ export async function GET() {
     return NextResponse.json(
       { 
          news: [
-           { title: "Market Volatility peaks ahead of RBI Policy", url: "https://economictimes.indiatimes.com/", image: "/images/mascot.png" }
+           { title: "Market Volatility peaks ahead of RBI Policy", url: "https://economictimes.indiatimes.com/", image: "/images/image.png" }
          ],
          insight: "Monitor RBI policy updates closely as they might influence short-term deposit rates."
       },

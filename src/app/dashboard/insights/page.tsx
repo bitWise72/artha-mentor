@@ -89,22 +89,24 @@ export default function InsightsPage() {
       {/* Economic Times Updates */}
       <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }} style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", marginBottom: "1.5rem", width: "100%" }}>
         <div className={styles.glassCard} style={{ flex: "1 1 100%" }}>
-          <h3 style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "1rem" }}>
-            <Globe size={18} color="var(--accent-color)" /> Latest Market Updates
-            <span style={{ fontSize: "0.7rem", color: "var(--text-secondary)", fontStyle: "italic", marginLeft: "auto" }}>Powered by Economic Times</span>
-          </h3>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "12px", marginBottom: "1rem" }}>
+            <img src="/images/image.png" alt="The Economic Times" style={{ height: "32px", objectFit: "contain" }} />
+            <span style={{ color: "var(--text-secondary)", fontStyle: "italic", fontSize: "0.85rem", borderLeft: "1px solid rgba(255,255,255,0.1)", paddingLeft: "12px", fontWeight: 500 }}>Live Market Updates</span>
+          </div>
           <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             <p style={{ color: "white", fontSize: "0.95rem", lineHeight: 1.5, marginBottom: "0.5rem", fontStyle: "italic", borderLeft: "3px solid var(--accent-color)", paddingLeft: "10px" }}>
-              {marketUpdates?.insight || "Synthesizing market impacts..."}
+              💡 {marketUpdates?.insight || "Synthesizing market impacts..."}
             </p>
-            {marketUpdates ? marketUpdates.news.map((n, i) => (
-              <a key={i} href={n.url} target="_blank" rel="noreferrer" style={{ display: "flex", gap: "12px", alignItems: "center", textDecoration: "none" }}>
-                <img src={n.image} style={{ width: "48px", height: "48px", objectFit: "cover", borderRadius: "8px" }} />
-                <p style={{ fontSize: "0.85rem", color: "white", margin: 0, fontWeight: 500, lineHeight: 1.4 }}>{n.title}</p>
-              </a>
-            )) : (
-              <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>Fetching ET headlines...</p>
-            )}
+            <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+              {marketUpdates ? marketUpdates.news.map((n, i) => (
+                <a key={i} href={n.url} target="_blank" rel="noreferrer" style={{ flex: "1 1 200px", padding: "12px", display: "flex", flexDirection: "column", gap: "10px", textDecoration: "none", transition: "transform 0.2s", borderRadius: "12px", background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+                  <img src={n.image} style={{ width: "100%", height: "100px", objectFit: "cover", borderRadius: "8px" }} />
+                  <p style={{ fontSize: "0.85rem", color: "white", margin: 0, fontWeight: 500, lineHeight: 1.4 }}>{n.title}</p>
+                </a>
+              )) : (
+                <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>Fetching ET headlines...</p>
+              )}
+            </div>
           </div>
         </div>
       </motion.div>
