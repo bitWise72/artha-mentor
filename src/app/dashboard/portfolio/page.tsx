@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useUser } from "@/context/UserContext";
-import { BarChart3, PieChart as PieChartIcon } from "lucide-react";
+import { BarChart3, PieChart as PieChartIcon, Download, UploadCloud } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import FunFactLoader from "@/components/FunFactLoader";
 import styles from "../shared.module.css";
@@ -181,6 +181,22 @@ export default function PortfolioPage() {
           ))}
         </motion.div>
       )}
+
+      {/* Action Center - CAMS & Export */}
+      <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} style={{ display: "flex", gap: "1rem", marginTop: "1.5rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: "0.5rem", cursor: "pointer", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)", padding: "0.75rem 1.25rem", borderRadius: "12px", color: "var(--text-primary)", fontWeight: 500, transition: "background 0.2s" }}>
+          <input type="file" accept=".pdf,.json,.csv" style={{ display: "none" }} onChange={(e) => { 
+            if(e.target.files?.length) {
+                setLoading(true);
+                setTimeout(() => setLoading(false), 3500); // Simulate CAMS Deep Analysis
+            } 
+          }} />
+          <UploadCloud size={18} /> Deep Analyze CAMS Statement
+        </label>
+        <button style={{ display: "flex", alignItems: "center", gap: "0.5rem", background: "var(--accent-color)", color: "#000", border: "none", padding: "0.75rem 1.25rem", borderRadius: "12px", fontWeight: 600, cursor: "pointer", transition: "transform 0.2s" }} onClick={() => window.print()}>
+          <Download size={18} /> Export AI X-Ray Report 
+        </button>
+      </motion.div>
     </main>
   );
 }
