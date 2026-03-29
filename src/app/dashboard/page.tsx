@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useUser } from "@/context/UserContext";
-import { Wallet, TrendingUp, Heart, Flame, Target, FileText, Users, MessageCircle, Loader2 } from "lucide-react";
+import { Wallet, TrendingUp, Heart, Flame, Target, FileText, Users, MessageCircle, Loader2, Globe } from "lucide-react";
 import Link from "next/link";
 import {
   Radar,
@@ -29,6 +29,7 @@ export default function Dashboard() {
   const { profile, calculateHealthScore, getHealthDimensions, getPortfolioDiversity } = useUser();
   const [aiHealth, setAiHealth] = useState<AIHealth | null>(null);
   const [loading, setLoading] = useState(true);
+  const [marketUpdates, setMarketUpdates] = useState<{news: any[], insight: string} | null>(null);
 
   // Fallback local data
   const localScore = calculateHealthScore();
@@ -55,7 +56,16 @@ export default function Dashboard() {
         setLoading(false);
       }
     };
+    const fetchMarketNews = async () => {
+      try {
+        const res = await fetch("/api/news");
+        const data = await res.json();
+        if (data.news) setMarketUpdates(data);
+      } catch (err) { }
+    };
+
     fetchAIHealth();
+    fetchMarketNews();
   }, [profile]);
 
   const score = aiHealth?.overallScore ?? localScore;
@@ -188,6 +198,39 @@ export default function Dashboard() {
           <div className={styles.actionTitle}>Chat with AI</div>
           <div className={styles.actionDesc}>Ask anything about your finances — powered by Artha Core.</div>
         </Link>
+      </motion.div>
+
+      {/* Avaatar AI & Economic Times Updates */}
+      <motion.div className={styles.middleRow} style={{ marginTop: "1rem" }} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.4 }}>
+        <div className={styles.panel} style={{ flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", marginBottom: "1rem", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "1rem" }}>
+            <img src="/images/nano_banana.png" style={{ height: "40px", width: "40px", borderRadius: "50%", marginRight: "1rem", border: "1px solid var(--accent-color)" }} />
+            <div>
+              <h2 className={styles.panelTitle} style={{ margin: 0, fontSize: "1.1rem" }}>Nano Banana (Avatar AI)</h2>
+              <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Market Insight Synthesizer</span>
+            </div>
+          </div>
+          <p style={{ color: "var(--text-secondary)", fontSize: "0.95rem", lineHeight: 1.5 }}>
+            {marketUpdates?.insight || (loading ? "Generating real-time insights..." : "Stay invested for long term compounding.")}
+          </p>
+        </div>
+
+        <div className={styles.panel} style={{ flex: 1 }}>
+          <h2 className={styles.panelTitle} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <Globe size={18} color="var(--accent-color)" /> Latest Updates
+            <span style={{ fontSize: "0.7rem", color: "var(--text-secondary)", fontStyle: "italic", marginLeft: "auto" }}>Powered by Economic Times</span>
+          </h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "1rem" }}>
+            {marketUpdates ? marketUpdates.news.map((n, i) => (
+              <a key={i} href={n.url} target="_blank" rel="noreferrer" style={{ display: "flex", gap: "12px", alignItems: "center", textDecoration: "none" }}>
+                <img src={n.image} style={{ width: "48px", height: "48px", objectFit: "cover", borderRadius: "8px" }} />
+                <p style={{ fontSize: "0.85rem", color: "white", margin: 0, fontWeight: 500, lineHeight: 1.4 }}>{n.title}</p>
+              </a>
+            )) : (
+              <p style={{ color: "var(--text-secondary)", fontSize: "0.85rem" }}>Loading ET headlines...</p>
+            )}
+          </div>
+        </div>
       </motion.div>
     </main>
   );

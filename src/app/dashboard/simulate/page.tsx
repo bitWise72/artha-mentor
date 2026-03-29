@@ -23,53 +23,6 @@ type DecisionNode = {
   }[];
 };
 
-const GAME_NODES: DecisionNode[] = [
-  {
-    ageTrigger: 30,
-    id: "tax_check",
-    icon: ShieldAlert,
-    title: "Tax Bleed Detected!",
-    description: "Artha AI noticed you're in the Old Regime without enough 80C deductions. You're losing ₹45,000 to taxes every year.",
-    choices: [
-      { label: "Switch to New Regime", impactLabel: "+₹45k/yr to investments", isPrimary: true, netWorthDelta: 0, sipDelta: 3750 },
-      { label: "Stay in Old Regime", impactLabel: "Ignore and pay higher tax", netWorthDelta: 0, sipDelta: 0 }
-    ]
-  },
-  {
-    ageTrigger: 33,
-    id: "family_os",
-    icon: Users,
-    title: "Life Event: Marriage 💍",
-    description: "It's time to merge finances! Will you optimize Joint HRA and match NPS contributions across both incomes with Family OS?",
-    choices: [
-      { label: "Run Joint Optimization", impactLabel: "+₹1.2L/yr tax saved", isPrimary: true, netWorthDelta: 0, sipDelta: 10000 },
-      { label: "File Separately", impactLabel: "Miss out on family efficiencies", netWorthDelta: 0, sipDelta: 0 }
-    ]
-  },
-  {
-    ageTrigger: 38,
-    id: "portfolio_xray",
-    icon: Activity,
-    title: "Portfolio Overlap Warning",
-    description: "Your broker shows 18% XIRR, but AI Portfolio X-Ray found a 65% overlap in your mutual funds and high expense ratios.",
-    choices: [
-      { label: "Rebalance automatically", impactLabel: "Removes drag, shifts to Alpha", isPrimary: true, netWorthDelta: 500000, sipDelta: 0 },
-      { label: "Keep current funds", impactLabel: "Suffer long-term TER drag", netWorthDelta: -300000, sipDelta: 0 }
-    ]
-  },
-  {
-    ageTrigger: 43,
-    id: "alpha_invest",
-    icon: TrendingUp,
-    title: "Unlock Sovereign Advantage",
-    description: "You have accumulated enough capital to access Sovereign Gold Bonds and Fractional Commercial Real Estate for passive yield.",
-    choices: [
-      { label: "Allocate to Alpha", impactLabel: "+2% average portfolio yield", isPrimary: true, netWorthDelta: 1500000, sipDelta: 0 },
-      { label: "Stick to FDs & standard MFs", impactLabel: "Lower passive income", netWorthDelta: 0, sipDelta: 0 }
-    ]
-  }
-];
-
 // Custom tiny tooltip for the top-right mini graph
 const MiniTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
@@ -86,7 +39,61 @@ export default function GameSimulationEngine() {
   const { profile } = useUser();
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentAge, setCurrentAge] = useState(profile.age);
-  const [targetFireAge] = useState(45);
+  const [targetFireAge] = useState(profile.age < 35 ? 45 : profile.age + 15);
+
+  const GAME_NODES = useMemo<DecisionNode[]>(() => {
+    const annualIncome = profile.monthlyIncome * 12;
+    const taxBleed = Math.round(annualIncome * 0.05);
+    const jointTaxBleed = Math.round(annualIncome * 0.08);
+
+    return [
+      {
+        ageTrigger: profile.age + 2,
+        id: "tax_check",
+        icon: ShieldAlert,
+        title: "Tax Bleed Detected!",
+        description: `Artha AI noticed your regime structuring isn't optimized. You're losing approx ₹${taxBleed.toLocaleString('en-IN')} to taxes every year.`,
+        choices: [
+          { label: "Switch Regime & Optimize", impactLabel: `+₹${Math.round(taxBleed/12).toLocaleString('en-IN')}/mo to investments`, isPrimary: true, netWorthDelta: 0, sipDelta: Math.round(taxBleed/12) },
+          { label: "Ignore", impactLabel: "Pay higher tax", netWorthDelta: 0, sipDelta: 0 }
+        ]
+      },
+      {
+        ageTrigger: profile.age + 5,
+        id: "family_os",
+        icon: Users,
+        title: "Life Event: Marriage 💍",
+        description: "It's time to merge finances! Will you optimize Joint HRA and match NPS contributions across both incomes with Family OS?",
+        choices: [
+          { label: "Run Joint Optimization", impactLabel: `+₹${(jointTaxBleed/100000).toFixed(1)}L/yr tax saved`, isPrimary: true, netWorthDelta: 0, sipDelta: Math.round(jointTaxBleed/12) },
+          { label: "File Separately", impactLabel: "Miss out on efficiencies", netWorthDelta: 0, sipDelta: 0 }
+        ]
+      },
+      {
+        ageTrigger: profile.age + 10,
+        id: "portfolio_xray",
+        icon: Activity,
+        title: "Portfolio Overlap Warning",
+        description: "Your broker shows high XIRR, but AI Portfolio X-Ray found a 65% overlap in mutual funds and high expense drag.",
+        choices: [
+          { label: "Rebalance automatically", impactLabel: "Removes drag, shifts to Alpha", isPrimary: true, netWorthDelta: Math.round(profile.investments * 0.2), sipDelta: 0 },
+          { label: "Keep current funds", impactLabel: "Suffer long-term TER drag", netWorthDelta: -Math.round(profile.investments * 0.1), sipDelta: 0 }
+        ]
+      },
+      {
+        ageTrigger: profile.age + 15,
+        id: "alpha_invest",
+        icon: TrendingUp,
+        title: "Unlock Sovereign Advantage",
+        description: "You have accumulated enough capital to access Sovereign Gold Bonds and Fractional Commercial Real Estate for passive yield.",
+        choices: [
+          { label: "Allocate to Alpha", impactLabel: "+2% average portfolio yield", isPrimary: true, netWorthDelta: Math.round(profile.investments * 0.4), sipDelta: 0 },
+          { label: "Stick to FDs & MFs", impactLabel: "Lower passive income", netWorthDelta: 0, sipDelta: 0 }
+        ]
+      }
+    ];
+  }, [profile]);
+
   
   // Game State
   const [activeNode, setActiveNode] = useState<DecisionNode | null>(null);

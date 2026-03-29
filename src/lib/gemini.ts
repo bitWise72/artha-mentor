@@ -275,3 +275,25 @@ export async function generateInsights(userContext: string): Promise<string> {
     return result.text || "{}";
   });
 }
+
+export async function generateContentFromNews(newsContext: string): Promise<string> {
+  return withRetry(async (client) => {
+    const result = await client.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `You are Artha AI, an Indian market expert. Read this raw news JSON from 'The Economic Times' and generate EXACTLY ONE very short, highly actionable paragraph (max 2 sentences, ~40 words) summarizing these latest Indian market updates and what it means for a retail investor's portfolio allocation today. Be concise, direct, and authoritative in tone.
+
+NEWS CONTEXT:
+${newsContext}`,
+            },
+          ],
+        },
+      ],
+    });
+    return result.text || "Market algorithms remain neutral. Continue disciplined SIPs across major caps.";
+  });
+}
